@@ -119,3 +119,36 @@ Below is a high-level diagram of the pipeline process:
   - Runs as a prerequisite workflow.
   - Ensures EKS cluster and ECR are provisioned before application CI/CD.
   - Outputs (ECR URLs, cluster details) are dynamically consumed by GitHub Actions.
+
+---
+
+## Challenges Faced
+
+During the implementation of this CI/CD pipeline, we encountered several challenges and learned how to overcome them:
+
+1. **Versioning Script Issues**
+
+   - The semantic versioning script occasionally failed when commit messages did not follow the expected format.
+   - Automatic git tag creation sometimes conflicted with existing tags, requiring manual cleanup.
+
+2. **Permissions in EKS**
+
+   - Kubernetes RBAC needed fine-grained configuration to allow ArgoCD and GitHub Actions workflows to deploy Helm charts.
+   - Some service accounts lacked permissions for managing resources (e.g., Secrets, ConfigMaps, or deployments), causing failed syncs until roles were properly configured.
+
+3. **Helm Provider Challenges**
+
+   - The Helm provider in GitHub Actions required correct kubeconfig context and namespace settings.
+   - Managing Helm releases across multiple environments (`dev`, `prod`) was tricky, particularly when updating image tags dynamically.
+   - Some Helm chart upgrades failed due to dependency mismatches or locked releases in the cluster.
+
+4. **EKS Module Constraints**
+
+   - Terraform EKS module required careful setup of VPC, subnets, and security groups.
+   - Deleting or recreating resources caused dependency issues if not handled in the right order (e.g., IGWs, load balancers, or node groups).
+   - Initial cluster provisioning sometimes failed due to AWS API limits or missing IAM permissions.
+
+5. **General CI/CD Integration**
+
+   - Synchronizing Terraform outputs (like ECR repo URLs) into the GitHub Actions workflow required extra scripting and error handling.
+   - Handling multiple environments and workspaces (dev/prod) added complexity in both Terraform and ArgoCD configuration.

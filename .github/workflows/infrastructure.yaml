@@ -3,7 +3,7 @@ name: Terraform
 on:
   push:
     branches:
-      - main
+      - release/**
     paths:
       - "infrastructure/terraform/**"
 
@@ -21,12 +21,11 @@ on:
 
 env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  #  ENVIRONMENT: ${{ github.event_name == 'workflow_dispatch'
-  #    && github.event.inputs.environment
-  #    || (github.ref_name == 'release/dev' && 'dev'
-  #    || github.ref_name == 'release/stage' && 'stage'
-  #    || 'prod') }}
-  ENVIRONMENT: dev
+  ENVIRONMENT: ${{ github.event_name == 'workflow_dispatch'
+    && github.event.inputs.environment
+    || (github.ref_name == 'release/dev' && 'dev'
+    || github.ref_name == 'release/stage' && 'stage'
+    || 'prod') }}
 
 permissions:
   contents: write
