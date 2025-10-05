@@ -124,7 +124,7 @@ Below is a high-level diagram of the pipeline process:
 
 ## Challenges Faced
 
-During the implementation of this CI/CD pipeline, we encountered several challenges and learned how to overcome them:
+During the implementation of this CI/CD pipeline, i encountered several challenges and learned how to overcome them:
 
 1. **Versioning Script Issues**
 
